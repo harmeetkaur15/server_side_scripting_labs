@@ -1,27 +1,20 @@
-var Hapi = require('hapi');
-var Inert = require('inert');
-var Path = require('path');
+let Hapi = require('hapi');
+let Path = require('path');
+let Inert = require('inert');
 
- var server = new Hapi.Server();
-//     connections: {
-//         routes: {
-//             files: {
-//                 relativeTo: __dirname
-//             }
-//         }
-//     }
-
-
+let server = new Hapi.Server({
+    connections: {
+        routes: {
+            files: {
+                relativeTo: __dirname
+            }
+        }
+    }
+});
 
 server.connection({
     host: 'localhost',
     port: Number(process.argv[2] || 8080)
-    
-    // port: process.env.PORT,
-    // host: process.env.IP,
-    // routes: {
-    //     cors: true
-    // }
 });
 
 server.register(Inert, (err) => {
@@ -29,13 +22,13 @@ server.register(Inert, (err) => {
 });
 
 server.route({
-    method: 'GET',
     path: '/',
-    handler: function (request, reply) {
-        reply.file('index.html');
+    method: 'GET',
+    handler: {
+        file: Path.join(__dirname, 'index.html')
     }
 });
 
-server.start((err) => {
-    if (err) throw err;
-});
+     server.start(function () {
+        console.log('Server running at:', server.info.uri);
+    })
