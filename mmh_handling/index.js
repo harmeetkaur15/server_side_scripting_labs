@@ -1,8 +1,9 @@
-let Hapi = require('hapi');
-let Path = require('path');
-let Inert = require('inert');
+let hapi = require('hapi');
+let path = require('path');
+let inert = require('inert');
 
-let server = new Hapi.Server({
+var server = new hapi.Server();
+let server = new hapi.Server({
     connections: {
         routes: {
             files: {
@@ -17,18 +18,17 @@ server.connection({
     port: Number(process.argv[2] || 8080)
 });
 
-server.register(Inert, (err) => {
-    if (err) throw err;
+server.register(inert, (error) => {
+    if (error) throw error;
 });
 
 server.route({
     path: '/',
     method: 'GET',
     handler: {
-        file: Path.join(__dirname, 'index.html')
+        file: path.join(__dirname, 'index.html')
     }
 });
-
-     server.start(function () {
-        console.log('Server running at:', server.info.uri);
-    })
+server.start(function () {
+    console.log('Server running at:', server.info.uri);
+})

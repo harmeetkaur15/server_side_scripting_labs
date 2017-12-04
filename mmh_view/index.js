@@ -1,27 +1,21 @@
-var Hapi = require('hapi');
-var Vision = require('vision');
-var Path = require('path');
-
-
-
+var hapi = require('hapi');
+var vision = require('vision');
+var path = require('path');
+var server = new hapi.Server();
 server.connection({
     host: 'localhost',
     port: Number(process.argv[2] || 8080)
 });
 
-var server = new Hapi.Server();
-
-server.register(Vision, (err) => {
-    if (err) throw err;
+server.register(vision, (error) => {
+    if (error) throw error;
 });
-
-
 
 server.views({
     engines: {
         html: require('handlebars')
     },
-    path: Path.join(__dirname, 'templates')
+    path: path.join(__dirname, 'templates')
 });
 
 server.route({
@@ -31,7 +25,6 @@ server.route({
     view: 'index.html'
     }
 });
-
- server.start(function () {
-        console.log('Server running at:', server.info.uri);
-    });
+server.start(function () {
+    console.log('Server running at:', server.info.uri);
+});
